@@ -4,11 +4,22 @@ import { useSelector, useDispatch } from 'react-redux'
 import { setBoard1, setBoard2, setBoard3 } from '../actions/HomeActions'
 import { useHistory } from 'react-router-dom'
 import Column from '../models/Column'
+import CardDeck from 'react-bootstrap/CardDeck';
+import Card from 'react-bootstrap/Card';
+import Modal from 'react-modal'
+
+import one from '../one.jpeg';
+import two from '../two.jpeg';
+import three from '../three.jpeg';
 
 const Home = () => {
     const [currentBoard, setCurrentBoard] = useState("board1")
+    const [showModal, setShowModal] = useState(false)
     const dispatch = useDispatch()
-    let history = useHistory()
+    const history = useHistory()
+     const board1 = useSelector(state => state.home.board1)
+    const board2 = useSelector(state => state.home.board2)
+    const board3 = useSelector(state => state.home.board3)
 
     useEffect(() => {
         if (localStorage.getItem('boards') === null) {
@@ -28,12 +39,18 @@ const Home = () => {
         }      
     }, [])
 
-    const board1 = useSelector(state => state.home.board1)
-    const board2 = useSelector(state => state.home.board2)
-    const board3 = useSelector(state => state.home.board3)
+   
+
+    const handleOpenModal = () => {
+        setShowModal(true)
+    }
+    const handleCloseModal = () => {
+        setShowModal(false)
+    }
 
     const createBoard = () => {
         let id = currentBoard
+        console.log(id)
         const boardName = document.getElementById("boardName").value;
         const column1 = document.getElementById("column1").value;
         const column2 = document.getElementById("column2").value;
@@ -58,35 +75,38 @@ const Home = () => {
             boards[2] = board
         }
         localStorage.setItem('boards', JSON.stringify(boards))
-        displayCreateForm();
-        redirectToBoard(id);
+        redirectToBoard(board, id);
     }
 
     const handleBoardClick = (event) => {
-        let id = event.target.id;
+        let id = event
+        setCurrentBoard(id)
+        console.log(id)
         if (id === 'board1') {
             if (board1.name === 'untitled') {
-                displayCreateForm(id, true)
+                handleOpenModal()
             } else {
-                redirectToBoard(id)
+                redirectToBoard(board1, id)
             }
         } else if (id === 'board2') {
             if (board2.name === 'untitled') {
-                displayCreateForm(id, true)
+                handleOpenModal()
             } else {
-                redirectToBoard(id)
+                redirectToBoard(board2, id)
             }
         } else if (id === 'board3') {
             if (board3.name === 'untitled') {
-                displayCreateForm(id, true)
+                handleOpenModal()
             } else {
-                redirectToBoard(id)
+                redirectToBoard(board3, id)
             }
         }
     }
 
-    const redirectToBoard = (id) => {
-        let board;
+    const redirectToBoard = (board, id) => {
+        // let board;
+        // console.log(board1)
+        /*
         if (id === 'board1') {
             board = board1
         } else if (id === 'board2') {
@@ -94,7 +114,8 @@ const Home = () => {
         } else if (id === 'board3') {
             board = board3
         }
-        console.log('test');
+        */
+        console.log(board);
         history.push({
             pathname: '/boardView',
             state: {
@@ -121,17 +142,34 @@ const Home = () => {
             <h3>Up Your Productivity</h3>
         </div>
         <div className="boardContainer">
-            <div id={"board1"} className ={"board board1"} onClick={handleBoardClick}>
-                <h3>{board1.name}</h3>
-            </div>
-            <div id={"board2"} className ={"board board2"} onClick={handleBoardClick}>
-                <h3>{board2.name}</h3>
-            </div>
-            <div id={"board3"} className ={"board board3"} onClick={handleBoardClick}>
-                <h3>{board3.name}</h3>
-            </div>
+        <CardDeck className={"deck"}>
+            <Card className={"boardCards"} onClick={() => handleBoardClick('board1')}>
+                <Card.Img variant="top" src={one} />
+                <Card.Body>
+                    <Card.Title><h2>{board1.name}</h2></Card.Title>
+                </Card.Body>
+            </Card>
+            <Card className={"boardCards"} onClick={() => handleBoardClick('board2')}>
+                <Card.Img variant="top" src={two} />
+                <Card.Body>
+                    <Card.Title><h2>{board2.name}</h2></Card.Title>
+                </Card.Body>
+            </Card>
+            <Card className={"boardCards"} onClick={() => handleBoardClick('board3')}>
+                <Card.Img variant="top" src={three} />
+                <Card.Body>
+                    <Card.Title><h2>{board3.name}</h2></Card.Title>
+                </Card.Body>
+            </Card>
+        </CardDeck>
         </div>
+        
         <div id={"createBoardContainer"} className={"createBoardContainer"}>
+        <Modal
+            isOpen={showModal}
+            contentLabel="Minimal Modal Example"
+            style={{content: {backgroundColor: '#DDCCBB'}}}
+        >
             <h3>Create your own Kanban Board</h3>
             <div>
                 <label>Board Name</label>
@@ -162,6 +200,7 @@ const Home = () => {
                 <input type={"text"} name={"column6"} id={"column6"} placeholder={"Column name..."} />
             </div>
             <button onClick={createBoard}>Create Board</button>
+        </Modal>
         </div>
         </div>
     ) 

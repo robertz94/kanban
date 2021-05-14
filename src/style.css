@@ -6,11 +6,24 @@ body{
 .homeTitles{
     padding-top: 50px;
     text-align: center;
+    line-height: 0.8;
 }
 
 .boardContainer{
-    padding-top: 30px;
+    padding-top: 110px;
     text-align: center;
+    width: 80%;
+    margin: 0 auto;
+    cursor: pointer;
+}
+
+.boardCards{
+    border: 1px solid lightgray;
+
+}
+
+.boardCards:hover{
+    background-color: rgb(242,242,242)
 }
 
 .board{
@@ -100,6 +113,14 @@ body{
     border: 1px solid black;
 }
 
+#trashCan {
+    margin-top: 30px;
+    margin-right: 20px;
+    width: 100px;
+    height: 100px;
+    display: inline-block;
+    float: right;
+}
 #columnIssues{
     list-style-type: none;
 }
