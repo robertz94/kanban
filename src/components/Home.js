@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import Board from '../Models/Board'
+import Board from '../models/Board'
 import { useSelector, useDispatch } from 'react-redux'
 import { setBoard1, setBoard2, setBoard3 } from '../actions/HomeActions'
 import { useHistory } from 'react-router-dom'
+import Column from '../models/Column'
 
 const Home = () => {
     const [currentBoard, setCurrentBoard] = useState("board1")
@@ -41,7 +42,7 @@ const Home = () => {
         const column5 = document.getElementById("column5").value;
         const column6 = document.getElementById("column6").value;
         let columns = [column1, column2, column3, column4, column5, column6];
-        columns = columns.filter(e => e !== '');
+        columns = columns.filter(e => e !== '').map(column => new Column(column, []))
         
         let boards = JSON.parse(localStorage.getItem('boards'));
         let board = new Board(boardName, columns)
@@ -97,7 +98,8 @@ const Home = () => {
         history.push({
             pathname: '/boardView',
             state: {
-                board: board
+                board: board,
+                id: id
             }
         })
     }

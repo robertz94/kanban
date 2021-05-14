@@ -1,4 +1,4 @@
-class Issue {
+export default class Issue {
     constructor(title, priority, column, icon) {
         this.title = title;
         this.priority = priority;
